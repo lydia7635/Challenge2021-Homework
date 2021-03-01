@@ -1,5 +1,5 @@
-# Challenge 2020
+# Challenge 2021
 
-改編自 [WooLNinesun / PygameMVC](https://github.com/WooLNinesun/PygameMVC) 和 [howard41436 / challenge2019](https://github.com/howard41436/challenge2019) 。
+改編自 [WooLNinesun / PygameMVC](https://github.com/WooLNinesun/PygameMVC) 和 [ktpss95112 / Challenge2020](https://github.com/ktpss95112/Challenge2020) 。
 
-開發 Document： https://hackmd.io/@HH54wAcPSMKu3sBWfWcDbQ/SkTXpnPTI
+開發 Document： TBD
