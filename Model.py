@@ -11,6 +11,8 @@ class StateMachine(object):
     Manages a stack based state machine.
     peek(), pop() and push() perform as traditionally expected.
     peeking and popping an empty stack returns None.
+
+    TL;DR. Just for game state recording.
     '''
     def __init__(self):
         self.statestack = []
@@ -84,6 +86,7 @@ class GameEngine:
             self.initialize()
 
         elif isinstance(event, EventEveryTick):
+            # Peek the state of the game and do corresponding work
             cur_state = self.state_machine.peek()
             if cur_state == Const.STATE_MENU:
                 self.update_menu()
@@ -139,6 +142,7 @@ class GameEngine:
         This function activates the GameEngine.
         '''
         self.running = True
+        # Tell every one to start
         self.ev_manager.post(EventInitialize())
         self.timer = Const.GAME_LENGTH
         while self.running:
@@ -157,6 +161,7 @@ class Player:
         Move the player along the direction by its speed.
         Will automatically clip the position so no need to worry out-of-bound moving.
         '''
+        # Modify position of player
         self.position += self.speed / Const.FPS * Const.DIRECTION_TO_VEC2[direction]
 
         # clipping
