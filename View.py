@@ -74,14 +74,66 @@ class GraphicalView:
         for player in self.model.players:
             center = list(map(int, player.position))
             pg.draw.circle(self.screen, Const.PLAYER_COLOR[player.player_id], center, Const.PLAYER_RADIUS)
+            if player.state == 'attack':
+                pg.draw.circle(self.screen, pg.Color('white'), center, Const.PLAYER_RADIUS, width = 5)
+
+        # show game timer
+        font = pg.font.Font(None, 24)
+        text_surface = font.render(f"Timer: {int(self.model.timer/Const.FPS) + 1}", 1, pg.Color('gray88'))
+        text_center = (Const.ARENA_SIZE[0] / 8, Const.ARENA_SIZE[1] / 16)
+        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
+
+        # show state-exchange time left
+        font = pg.font.Font(None, 24)
+        text_surface = font.render(f"Exchange time left: {int(self.model.timer/Const.FPS) % Const.ATTACK_EXCHANGE_SEC + 1}", 1, pg.Color('gray88'))
+        text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 16)
+        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
+        
+        # show player states
+        font = pg.font.Font(None, 24)
+        text_surface = font.render(f"Attacker: Player {self.model.attacker}", 1, pg.Color('gray88'))
+        text_center = (Const.ARENA_SIZE[0] / 8 * 7, Const.ARENA_SIZE[1] / 16)
+        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
 
         pg.display.flip()
 
     def render_stop(self):
-        pass
+        # draw background
+        self.screen.fill(Const.BACKGROUND_COLOR)
+
+        # show STOP
+        font = pg.font.Font(None, 72)
+        text_surface = font.render("STOP", 1, pg.Color('gray88'))
+        text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2)
+        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
+
+        font = pg.font.Font(None, 48)
+        text_surface = font.render("Press [space] to continue ...", 1, pg.Color('gray88'))
+        text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 8 * 5)
+        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
+
+        # show game timer
+        font = pg.font.Font(None, 24)
+        text_surface = font.render(f"Timer: {int(self.model.timer/Const.FPS) + 1}", 1, pg.Color('gray88'))
+        text_center = (Const.ARENA_SIZE[0] / 8, Const.ARENA_SIZE[1] / 16)
+        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
+
+        pg.display.flip()
 
     def render_endgame(self):
         # draw background
         self.screen.fill(Const.BACKGROUND_COLOR)
+
+        # show winner
+        font = pg.font.Font(None, 72)
+        try:
+            if self.model.winner_id == -1:
+                raise 
+            winner = f'Player {self.model.winner_id}'
+            text_surface = font.render(f"{winner} wins!", 1, Const.PLAYER_COLOR[self.model.winner_id])
+        except:
+            text_surface = font.render("No one wins...", 1, pg.Color('gray88'))
+        text_center = (Const.ARENA_SIZE[0] / 2, Const.ARENA_SIZE[1] / 2)
+        self.screen.blit(text_surface, text_surface.get_rect(center=text_center))
 
         pg.display.flip()

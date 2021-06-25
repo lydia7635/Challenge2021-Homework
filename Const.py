@@ -2,7 +2,8 @@ import pygame as pg
 
 # model
 FPS = 60 # frame per second
-GAME_LENGTH = 30 * FPS
+GAME_LENGTH_SEC = 30
+GAME_LENGTH = GAME_LENGTH_SEC * FPS
 PLAYER_INIT_POSITION = [pg.Vector2(200, 400), pg.Vector2(600, 400)]
 PLAYER_RADIUS = 75
 SPEED_ATTACK = 100
@@ -14,17 +15,19 @@ DIRECTION_TO_VEC2 = {
     'right': pg.Vector2(1, 0),
 }
 
+ATTACK_EXCHANGE_SEC = 3
+
 
 # State machine constants
 STATE_POP = 0 # for convenience, not really a state which we can be in
 STATE_MENU = 1
 STATE_PLAY = 2
-STATE_STOP = 3 # not implemented yet
+STATE_STOP = 3
 STATE_ENDGAME = 4
 
 
 # view
-WINDOW_CAPTION = 'Challenge 2020 Homework'
+WINDOW_CAPTION = 'Challenge 2021 Homework'
 WINDOW_SIZE = (800, 800)
 ARENA_SIZE = (800, 800)
 BACKGROUND_COLOR = pg.Color('black')

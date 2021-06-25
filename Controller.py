@@ -60,9 +60,13 @@ class Controller:
         for k, v in Const.PLAYER_KEYS.items():
             if keys[k]:
                 self.ev_manager.post(EventPlayerMove(*v))
+        if keys[pg.K_ESCAPE]:
+            self.ev_manager.post(EventStateChange(Const.STATE_STOP))
 
     def ctrl_stop(self, key_down_events):
-        pass
+        for event_pg in key_down_events:
+            if event_pg.type == pg.KEYDOWN and event_pg.key == pg.K_SPACE:
+                self.ev_manager.post(EventStateChange(Const.STATE_PLAY))
 
     def ctrl_endgame(self, key_down_events):
         pass

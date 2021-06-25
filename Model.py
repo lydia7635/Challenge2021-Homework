@@ -77,6 +77,9 @@ class GameEngine:
         self.clock = pg.time.Clock()
         self.state_machine.push(Const.STATE_MENU)
         self.players = [Player(0), Player(1)]
+        self.player_num = 2
+        self.attacker = 1
+        self.winner_id = -1
 
     def notify(self, event: BaseEvent):
         '''
@@ -115,6 +118,14 @@ class GameEngine:
         elif isinstance(event, EventTimesUp):
             self.state_machine.push(Const.STATE_ENDGAME)
 
+    def collision_happen(self, attacker, defender):
+        return ((attacker.position.x - defender.position.x)**2 + (attacker.position.y - defender.position.y)**2 <= (Const.PLAYER_RADIUS*2)**2)
+
+    def exchange_attacker(self, attacker, defender):
+        attacker.speed, defender.speed = defender.speed, attacker.speed
+        attacker.state, defender.state = defender.state, attacker.state
+        self.attacker = defender.player_id
+
     def update_menu(self):
         '''
         Update the objects in welcome scene.
@@ -127,7 +138,18 @@ class GameEngine:
         Update the objects not controlled by user.
         For example: obstacles, items, special effects
         '''
-        pass
+        player_attacker = self.players[self.attacker]
+        player_next_attacker = self.players[(self.attacker + 1) % self.player_num]
+
+        if (self.timer % (Const.ATTACK_EXCHANGE_SEC * Const.FPS)) == 0:
+            self.exchange_attacker(player_attacker, player_next_attacker)
+
+        # if collision 
+        player_defenders = [player for player in self.players if player not in [player_attacker]]
+        for player_defender in player_defenders:
+            if self.collision_happen(player_attacker, player_defender):
+                self.ev_manager.post(EventStateChange(Const.STATE_ENDGAME))
+                self.winner_id = player_attacker.player_id
 
     def update_endgame(self):
         '''
@@ -135,6 +157,7 @@ class GameEngine:
         For example: scoreboard
         '''
         pass
+
 
     def run(self):
         '''
@@ -155,6 +178,7 @@ class Player:
         self.player_id = player_id
         self.position = Const.PLAYER_INIT_POSITION[player_id] # is a pg.Vector2
         self.speed = Const.SPEED_ATTACK if player_id == 1 else Const.SPEED_DEFENSE
+        self.state = 'attack' if player_id == 1 else 'defense'
 
     def move_direction(self, direction: str):
         '''
